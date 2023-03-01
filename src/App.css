@@ -1,38 +1,37 @@
 .App {
-  text-align: center;
+  display: grid;
+  grid-template-areas:
+    "a c"
+    "b c";
+  grid-template-columns: 3fr 2fr;
+  grid-template-rows: 2fr 3fr;
+  gap: 0px 10px;
+  width: 500px;
+  height: 500px;
+  background-color: black;
+  padding: 10px;
+}
+.ScoreBox {
+  grid-area: a;
+  background-image: linear-gradient(320deg, #db9c4a 0, #624137 100%);
+}
+.StatBox {
+  grid-area: b;
+  background-color: #e6e1cf;
+}
+.MultiplierBox {
+  grid-area: c;
+  background-color: #e5e4e2;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.StatRow {
+  padding: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.SelectStat {
+  margin: 5px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.InputStat {
+  margin: 5px;
 }
