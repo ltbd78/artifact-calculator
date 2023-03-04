@@ -31,7 +31,7 @@ export default function App() {
   const [statInputs, setStatInputs] = useState([0.0, 0.0, 0.0, 0.0]);
   const [selectedOptions, setSelectedOptions] = useState([...Object.keys(statRolls).slice(0, 4)]);
   function updateStatMultipliers(key, newValue) {
-    const newDict = {...statMultipliers};
+    const newDict = { ...statMultipliers };
     newDict[key] = newValue;
     setStatMultipliers(newDict);
   }
@@ -73,47 +73,21 @@ function ScoreBox({ statRolls, statInputs, selectedOptions, statMultipliers }) {
 function StatBox({ statTypes, statInputs, selectedOptions, updateStatInputs, updateSelectedOptions }) {
   const statRows = [];
   for (let i = 0; i < 4; i++) {
+    const optionElements = statTypes.map((type) => (
+      <option key={type} value={type}>
+        {type}
+      </option>
+    ));
     statRows.push(
-      <StatRow
-        key={i}
-        statTypes={statTypes}
-        initialInput={statInputs[i]}
-        initialOption={selectedOptions[i]}
-        updateStatInputs={updateStatInputs}
-        updateSelectedOptions={updateSelectedOptions}
-        index={i}
-      />
+      <div className="StatRow" key={i}>
+        <select className="SelectStat" value={selectedOptions[i]} onChange={(event) => updateSelectedOptions(i, event.target.value)}>
+          {optionElements}
+        </select>
+        <input className="InputStat" type="number" value={statInputs[i]} onChange={(event) => updateStatInputs(i, parseFloat(event.target.value))} />
+      </div>
     );
   }
   return <div className="StatBox">{statRows}</div>;
-}
-
-function StatRow({ statTypes, initialInput, initialOption, updateStatInputs, updateSelectedOptions, index }) {
-  // TODO: refactor into Statbox
-  function handleValueChange(event) {
-    const newValue = parseFloat(event.target.value);
-    updateStatInputs(index, newValue);
-  }
-  function handleOptionChange(event) {
-    const newValue = event.target.value;
-    updateSelectedOptions(index, newValue);
-  }
-  const optionElements = [];
-  for (let i = 0; i < statTypes.length; i++) {
-    optionElements.push(
-      <option key={statTypes[i]} value={statTypes[i]}>
-        {statTypes[i]}
-      </option>
-    );
-  }
-  return (
-    <div className="StatRow">
-      <select className="SelectStat" value={initialOption} onChange={handleOptionChange}>
-        {optionElements}
-      </select>
-      <input className="InputStat" type="number" value={initialInput} onChange={handleValueChange} />
-    </div>
-  );
 }
 
 function MultiplierBox({ statMultipliers, updateStatMultipliers }) {
@@ -122,7 +96,7 @@ function MultiplierBox({ statMultipliers, updateStatMultipliers }) {
     multiplierRows.push(
       <div className="MultiplierRow" key={key}>
         <span className="StatType">{key}</span>
-        <input className="StatMultiplier" value={value} onChange={(event) => updateStatMultipliers(key, event.target.value)} />
+        <input className="StatMultiplier" value={value} onChange={(event) => updateStatMultipliers(key, parseFloat(event.target.value))} />
       </div>
     );
   }
