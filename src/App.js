@@ -1,84 +1,82 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-// hours: 8
+// hours: 10
 
 export default function App() {
-  const statTypes = ["ATK %", "DEF %", "HP %", "C. DMG", "C. RATE", "EM", "ER", "ATK", "DEF", "HP"];
-  const [inputArray, setInputArray] = useState([0.0, 0.0, 0.0, 0.0]);
-  const [optionArray, setOptionArray] = useState([...statTypes.slice(0, 4)]);
-  function updateInputArray(index, newValue) {
-    const newArray = [...inputArray];
+  const statRolls = {
+    "ATK %": 4.975,
+    "DEF %": 6.2,
+    "HP %": 4.975,
+    "C. DMG": 6.6,
+    "C. RATE": 3.3,
+    EM: 19.75,
+    ER: 5.5,
+    ATK: 16.75,
+    DEF: 19.75,
+    HP: 254.0
+  };
+  const [statMultipliers, setStatMultipliers] = useState({
+    "ATK %": 1.0,
+    "DEF %": 1.0,
+    "HP %": 1.0,
+    "C. DMG": 1.1,
+    "C. RATE": 1.1,
+    EM: 1.0,
+    ER: 1.0,
+    ATK: 0.3,
+    DEF: 0.3,
+    HP: 0.3
+  });
+  const [statInputs, setStatInputs] = useState([0.0, 0.0, 0.0, 0.0]);
+  const [selectedOptions, setSelectedOptions] = useState([...Object.keys(statRolls).slice(0, 4)]);
+  // function updateStatMultipliers(key, newValue) {}
+  function updateStatInputs(index, newValue) {
+    const newArray = [...statInputs];
     newArray[index] = newValue;
-    setInputArray(newArray);
+    setStatInputs(newArray);
   }
-  function updateOptionArray(index, newValue) {
-    const newArray = [...optionArray];
+  function updateSelectedOptions(index, newValue) {
+    const newArray = [...selectedOptions];
     newArray[index] = newValue;
-    setOptionArray(newArray);
+    setSelectedOptions(newArray);
   }
-  const score = inputArray.reduce((a, b) => a + b, 0);
   return (
     <div className="App">
-      <ScoreBox score={score} optionArray={optionArray} />
+      <ScoreBox statRolls={statRolls} statInputs={statInputs} selectedOptions={selectedOptions} statMultipliers={statMultipliers} />
       <StatBox
-        statTypes={statTypes}
-        inputArray={inputArray}
-        optionArray={optionArray}
-        updateInputArray={updateInputArray}
-        updateOptionArray={updateOptionArray}
+        statTypes={Object.keys(statRolls)}
+        statInputs={statInputs}
+        selectedOptions={selectedOptions}
+        updateStatInputs={updateStatInputs}
+        updateSelectedOptions={updateSelectedOptions}
       />
       <MultiplierBox />
     </div>
   );
 }
 
-function ScoreBox({ score, optionArray }) {
-  return (
-    <div className="ScoreBox">
-      Score: {score} {optionArray}
-    </div>
-  );
+function ScoreBox({ statRolls, statInputs, selectedOptions, statMultipliers }) {
+  let score = 0;
+  for (let i = 0; i < 4; i++) {
+    if (statRolls[selectedOptions[i]] !== 0) {
+      score += (statInputs[i] * statMultipliers[selectedOptions[i]]) / statRolls[selectedOptions[i]];
+    }
+  }
+  return <div className="ScoreBox">Score: {score}</div>;
 }
 
-function StatBox({ statTypes, inputArray, optionArray, updateInputArray, updateOptionArray }) {
-  function StatRow({ statTypes, initialInput, initialOption, updateInputArray, updateOptionArray, index }) {
-    // todo: fix unfocusing
-    function handleInputChange(event) {
-      const newValue = parseFloat(event.target.value);
-      updateInputArray(index, newValue);
-    }
-    function handleOptionChange(event) {
-      const newValue = event.target.value;
-      updateOptionArray(index, newValue);
-    }
-    const optionElements = [];
-    for (let i = 0; i < statTypes.length; i++) {
-      optionElements.push(
-        <option key={statTypes[i]} value={statTypes[i]}>
-          {statTypes[i]}
-        </option>
-      );
-    }
-    return (
-      <div className="StatRow">
-        <select className="SelectStat" value={initialOption} onChange={handleOptionChange}>
-          {optionElements}
-        </select>
-        <input className="InputStat" type="number" value={initialInput} onChange={handleInputChange} />
-      </div>
-    );
-  }
+function StatBox({ statTypes, statInputs, selectedOptions, updateStatInputs, updateSelectedOptions }) {
   const statRows = [];
-  for (let i = 0; i < inputArray.length; i++) {
+  for (let i = 0; i < 4; i++) {
     statRows.push(
       <StatRow
         key={i}
         statTypes={statTypes}
-        initialInput={inputArray[i]}
-        initialOption={optionArray[i]}
-        updateInputArray={updateInputArray}
-        updateOptionArray={updateOptionArray}
+        initialInput={statInputs[i]}
+        initialOption={selectedOptions[i]}
+        updateStatInputs={updateStatInputs}
+        updateSelectedOptions={updateSelectedOptions}
         index={i}
       />
     );
@@ -86,8 +84,37 @@ function StatBox({ statTypes, inputArray, optionArray, updateInputArray, updateO
   return <div className="StatBox">{statRows}</div>;
 }
 
-function MultiplierBox({ statTypes }) {
-  return <div className="MultiplierBox">MultiplierBox</div>;
+function StatRow({ statTypes, initialInput, initialOption, updateStatInputs, updateSelectedOptions, index }) {
+  function handleValueChange(event) {
+    const newValue = parseFloat(event.target.value);
+    updateStatInputs(index, newValue);
+  }
+  function handleOptionChange(event) {
+    const newValue = event.target.value;
+    updateSelectedOptions(index, newValue);
+  }
+  const optionElements = [];
+  for (let i = 0; i < statTypes.length; i++) {
+    optionElements.push(
+      <option key={statTypes[i]} value={statTypes[i]}>
+        {statTypes[i]}
+      </option>
+    );
+  }
+  return (
+    <div className="StatRow">
+      <select className="SelectStat" value={initialOption} onChange={handleOptionChange}>
+        {optionElements}
+      </select>
+      <input className="InputStat" type="number" value={initialInput} onChange={handleValueChange} />
+    </div>
+  );
 }
 
-function getScore() {}
+function MultiplierBox({ statMultipliers }) {
+  const multiplierRows = [];
+  // for (let i = 0; i < Object.keys(statMultipliers).length; i++) {
+
+  // }
+  return <div className="MultiplierBox">MultiplierBox</div>;
+}
