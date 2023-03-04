@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./App.css";
+import "./App.scss";
 
 // hours: 10
 
@@ -31,7 +31,7 @@ export default function App() {
   const [statInputs, setStatInputs] = useState([0.0, 0.0, 0.0, 0.0]);
   const [selectedOptions, setSelectedOptions] = useState([...Object.keys(statRolls).slice(0, 4)]);
   function updateStatMultipliers(key, newValue) {
-    const newDict = { ...statMultipliers };
+    const newDict = {...statMultipliers};
     newDict[key] = newValue;
     setStatMultipliers(newDict);
   }
@@ -73,11 +73,7 @@ function ScoreBox({ statRolls, statInputs, selectedOptions, statMultipliers }) {
 function StatBox({ statTypes, statInputs, selectedOptions, updateStatInputs, updateSelectedOptions }) {
   const statRows = [];
   for (let i = 0; i < 4; i++) {
-    const optionElements = statTypes.map((type) => (
-      <option key={type} value={type}>
-        {type}
-      </option>
-    ));
+    const optionElements = statTypes.map((type) => (<option key={type} value={type}>{type}</option>));
     statRows.push(
       <div className="StatRow" key={i}>
         <select className="SelectStat" value={selectedOptions[i]} onChange={(event) => updateSelectedOptions(i, event.target.value)}>
