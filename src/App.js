@@ -30,7 +30,11 @@ export default function App() {
   });
   const [statInputs, setStatInputs] = useState([0.0, 0.0, 0.0, 0.0]);
   const [selectedOptions, setSelectedOptions] = useState([...Object.keys(statRolls).slice(0, 4)]);
-  // function updateStatMultipliers(key, newValue) {}
+  function updateStatMultipliers(key, newValue) {
+    const newDict = {...statMultipliers};
+    newDict[key] = newValue;
+    setStatMultipliers(newDict);
+  }
   function updateStatInputs(index, newValue) {
     const newArray = [...statInputs];
     newArray[index] = newValue;
@@ -51,7 +55,7 @@ export default function App() {
         updateStatInputs={updateStatInputs}
         updateSelectedOptions={updateSelectedOptions}
       />
-      <MultiplierBox />
+      <MultiplierBox statMultipliers={statMultipliers} updateStatMultipliers={updateStatMultipliers} />
     </div>
   );
 }
@@ -85,6 +89,7 @@ function StatBox({ statTypes, statInputs, selectedOptions, updateStatInputs, upd
 }
 
 function StatRow({ statTypes, initialInput, initialOption, updateStatInputs, updateSelectedOptions, index }) {
+  // TODO: refactor into Statbox
   function handleValueChange(event) {
     const newValue = parseFloat(event.target.value);
     updateStatInputs(index, newValue);
@@ -111,10 +116,15 @@ function StatRow({ statTypes, initialInput, initialOption, updateStatInputs, upd
   );
 }
 
-function MultiplierBox({ statMultipliers }) {
+function MultiplierBox({ statMultipliers, updateStatMultipliers }) {
   const multiplierRows = [];
-  // for (let i = 0; i < Object.keys(statMultipliers).length; i++) {
-
-  // }
-  return <div className="MultiplierBox">MultiplierBox</div>;
+  for (const [key, value] of Object.entries(statMultipliers)) {
+    multiplierRows.push(
+      <div className="MultiplierRow" key={key}>
+        <span className="StatType">{key}</span>
+        <input className="StatMultiplier" value={value} onChange={(event) => updateStatMultipliers(key, event.target.value)} />
+      </div>
+    );
+  }
+  return <div className="MultiplierBox">{multiplierRows}</div>;
 }
