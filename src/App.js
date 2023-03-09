@@ -28,7 +28,7 @@ export default function App() {
     DEF: 0.3,
     HP: 0.3
   });
-  const [statInputs, setStatInputs] = useState([0.0, 0.0, 0.0, 0.0]);
+  const [statInputs, setStatInputs] = useState([null, null, null, null]);
   const [selectedOptions, setSelectedOptions] = useState([...Object.keys(statRolls).slice(0, 4)]);
   function updateStatMultipliers(key, newValue) {
     const newDict = { ...statMultipliers };
@@ -67,7 +67,7 @@ function ScoreBox({ statRolls, statInputs, selectedOptions, statMultipliers }) {
       score += (statInputs[i] * statMultipliers[selectedOptions[i]]) / statRolls[selectedOptions[i]];
     }
   }
-  return <div className="score-box">Score: {score}</div>;
+  return <div className="score-box">Score: {score.toFixed(2)}</div>;
 }
 
 function StatBox({ statTypes, statInputs, selectedOptions, updateStatInputs, updateSelectedOptions }) {
@@ -100,5 +100,5 @@ function MultiplierBox({ statMultipliers, updateStatMultipliers }) {
       </div>
     );
   }
-  return <div className="multiplier-box">{multiplierRows}</div>;
+  return <div className="multiplier-box">Multipliers{multiplierRows}</div>;
 }

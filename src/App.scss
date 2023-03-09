@@ -41,10 +41,15 @@
     grid-area: c;
     background-color: #e5e4e2;
 
-    .multiplier-row {
-      display: block;
+    .multiplier-row {    
+      display: flex;
+      margin: 10px;
       .stat-type {
-        height: 100px;
+        width: 40%;
+      }  
+      .input-multiplier {
+        width: 60%;
+        
       }
     }
   }
