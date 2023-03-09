@@ -11,55 +11,41 @@
   background-color: black;
   padding: 10px;
 
-  .ScoreBox {
+  .score-box {
     grid-area: a;
     background-image: linear-gradient(320deg, #db9c4a 0, #624137 100%);
   }
 
-  .StatBox {
+  .stat-box {
     grid-area: b;
     background-color: #e6e1cf;
+    align-items: center;
 
-    .StatRow {
+    .stat-row {
+      display: flex;
+      justify-content: center;
+      // align-items: center;
       padding: 5px;
 
-      .SelectStat {
+      .select-stat {
         margin: 5px;
       }
 
-      .InputStat {
+      .input-stat {
         margin: 5px;
       }
     }
   }
 
-  .MultiplierBox {
+  .multiplier-box {
     grid-area: c;
     background-color: #e5e4e2;
-    // display: flex;
-    // flex-direction: column;
 
-    .MultiplierRow {
-      // display: flex;
-      justify-content: space-between;
-      align-items: center;
-      // margin-bottom: 10px;
+    .multiplier-row {
+      display: block;
+      .stat-type {
+        height: 100px;
+      }
     }
   }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-.StatType {
-  width: 100px;
 }
